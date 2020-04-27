@@ -2,11 +2,11 @@ package com.smartsced.servicebackend.Manager;
 
 import com.smartsced.servicebackend.Entities.EmployeeEntity;
 import com.smartsced.servicebackend.Entities.ServiceEntity;
+import com.smartsced.servicebackend.Exceptions.NotFoundException;
 import com.smartsced.servicebackend.Repository.EmployeeRepository;
 import com.smartsced.servicebackend.Repository.ServiceRepository;
 import com.smartsced.servicebackend.Resources.EmployeeResource;
 import com.smartsced.servicebackend.Resources.ServiceResource;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -68,10 +68,10 @@ public class Manager {
 
 
 
-    public ServiceResource deleteService(int serviceId) throws NotFound {
+    public ServiceResource deleteService(int serviceId) throws NotFoundException {
 
         if(!serviceRepository.findById(serviceId).isPresent())
-            throw new NotFound();
+            throw new NotFoundException("No Service");
 
         ServiceResource serviceToRemove = convertServiceEntityToServiceResource(serviceRepository.findById(serviceId).get());
 
@@ -80,18 +80,18 @@ public class Manager {
         return serviceToRemove;
     }
 
-    public ServiceResource getService(int serviceId) throws NotFound {
+    public ServiceResource getService(int serviceId) throws NotFoundException {
         Optional<ServiceEntity> foundService = serviceRepository.findById(serviceId);
         if(!foundService.isPresent()){
-            throw new NotFound();
+            throw new NotFoundException("No Service");
         }
 
         return convertServiceEntityToServiceResource(foundService.get());
     }
 
-    public ServiceResource updateService(int serviceId, ServiceResource serviceResource) throws NotFound {
+    public ServiceResource updateService(int serviceId, ServiceResource serviceResource) throws NotFoundException {
         if(!serviceRepository.findById(serviceId).isPresent()) {
-            throw new NotFound();
+            throw new NotFoundException("No Service found");
         }
         ServiceResource serviceToUpdate = convertServiceEntityToServiceResource(serviceRepository.findById(serviceId).get());
 
@@ -161,10 +161,10 @@ public class Manager {
         return result;
     }
 
-    public EmployeeResource getEmployee(int employeeId) throws NotFound {
+    public EmployeeResource getEmployee(int employeeId) throws NotFoundException {
         Optional<EmployeeEntity> foundEmp = employeeRepository.findById(employeeId);
         if(!foundEmp.isPresent()){
-            throw new NotFound();
+            throw new NotFoundException("No Service found");
         }
 
         return convertEmployeeEntityToEmployeeResource(foundEmp.get());

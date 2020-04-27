@@ -1,12 +1,19 @@
 package com.smartsced.servicebackend.DataService;
 
+import com.smartsced.servicebackend.Dtos.LocationRessource;
+import com.smartsced.servicebackend.Dtos.LongitudeLatitude;
+import com.smartsced.servicebackend.Exceptions.LocationDataServiceException;
+import com.smartsced.servicebackend.Exceptions.LocationNotFoundException;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class LocationIQDataService {
     private static final String LOCATION_IQ_URL = "https://us1.locationiq.com/v1/search.php?key={apiKey}&q={searchString}&format=json";
 

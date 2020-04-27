@@ -1,6 +1,7 @@
 package com.smartsced.servicebackend.DataService;
 
 import com.smartsced.servicebackend.Dtos.EmployeeDto;
+import com.smartsced.servicebackend.Dtos.LongitudeLatitude;
 import com.smartsced.servicebackend.Dtos.ServiceDto;
 import com.smartsced.servicebackend.Entities.ServiceEntity;
 import com.smartsced.servicebackend.Exceptions.EmployeesBadRequestException;
@@ -9,7 +10,8 @@ import com.smartsced.servicebackend.Manager.Manager;
 import com.smartsced.servicebackend.Repository.ServiceRepository;
 import com.smartsced.servicebackend.Resources.EmployeeResource;
 import com.smartsced.servicebackend.Resources.ServiceResource;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +23,9 @@ import java.util.List;
 public class ServiceDataService {
     @Autowired
     Manager manager;
+
+    @Autowired
+    private LocationIQDataService locationIQDataService;
 
     private HashMap<Integer, ServiceDto> services = new HashMap<>();
     private HashMap<Integer, EmployeeDto> employees = new HashMap<>();
@@ -47,10 +52,10 @@ public class ServiceDataService {
 
         }
 
-        if(employeeDto.getName().length()<=4)
+        if(employeeDto.getName().length()<=3)
         {
 
-       throw new EmployeesBadRequestException("The length of the name of the employee is smaller than 4");
+       throw new EmployeesBadRequestException("The length of the name of the employee is smaller than 3");
 
 
         }
@@ -75,6 +80,7 @@ public class ServiceDataService {
         result.setName(emp.getName());
         result.setLatitude(emp.getLatitude());
         result.setLongitude(emp.getLongitude());
+
         return result;
     }
 
@@ -99,14 +105,16 @@ public class ServiceDataService {
         ServiceResource result = new ServiceResource();
      //   String[] longAndLati = getLongitudeAndLatitudeFromAddress(sService.getAddress());
 
-        try {
+
             result.setEmployee(manager.getEmployee(sService.getEmployeeId()));
-        } catch (NotFound notFound) {
-            throw new NotFoundException("EmployeeId must be set");
-        }
+
         result.setDate(sService.getDate());
-        result.setLatitude("1");
-        result.setLongitude("2");
+
+
+        LongitudeLatitude longitudeLatitude = locationIQDataService.getLongitudeLatitudeByAddress(sService.getAddress());
+
+        result.setLatitude(longitudeLatitude.getLatitude());
+        result.setLongitude(longitudeLatitude.getLongitude());
       //  result.setId(sService.getId());
 
         result.setName(sService.getName());
@@ -120,10 +128,10 @@ public class ServiceDataService {
     }
 
     public ServiceResource addService(ServiceDto serviceDto) {
-        if(serviceDto.getName().length()<=4)
+        if(serviceDto.getName().length()<=2)
         {
 
-            throw new EmployeesBadRequestException("The length of the service of the employee is smaller than 4");
+            throw new EmployeesBadRequestException("The length of the service of the employee is smaller than 2");
 
 
         }
@@ -144,9 +152,9 @@ public class ServiceDataService {
             throw new EmployeesBadRequestException("address is null");
         }
 
-        if(serviceDto.getAddress().length()<=5)
+        if(serviceDto.getAddress().length()<=3)
         {
-            throw new EmployeesBadRequestException("Address is smaller than 5");
+            throw new EmployeesBadRequestException("Address is smaller than 3");
         }
 
 //        ServiceDto newService = new ServiceDto();
@@ -166,7 +174,7 @@ public class ServiceDataService {
 //        return Integer.parseInt(psRaw);
 //    }
 //
-    public ServiceResource editService(int serviceId, ServiceDto serviceDto) throws NotFound {
+    public ServiceResource editService(int serviceId, ServiceDto serviceDto) {
       ServiceResource result;
       try {
           result = manager.updateService(serviceId,convertServiceToService(serviceDto));
@@ -178,6 +186,7 @@ public class ServiceDataService {
 
         return result;
     }
+    
 //
     public ServiceResource deleteService(int serviceId) {
 

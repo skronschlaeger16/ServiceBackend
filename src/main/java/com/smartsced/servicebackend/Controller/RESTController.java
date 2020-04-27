@@ -3,9 +3,9 @@ package com.smartsced.servicebackend.Controller;
 import com.smartsced.servicebackend.DataService.ServiceDataService;
 import com.smartsced.servicebackend.Dtos.EmployeeDto;
 import com.smartsced.servicebackend.Dtos.ServiceDto;
+import com.smartsced.servicebackend.Exceptions.NotFoundException;
 import com.smartsced.servicebackend.Resources.EmployeeResource;
 import com.smartsced.servicebackend.Resources.ServiceResource;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +36,7 @@ import java.util.List;
 //
         @RequestMapping(value ="/services/{serviceId}", method = RequestMethod.PUT)
         public ServiceResource editService(@PathVariable int serviceId, @RequestBody ServiceDto
-                serviceDto) throws NotFound {
+                serviceDto) throws NotFoundException {
             return serviceDataService.editService(serviceId, serviceDto);
         }
 //
