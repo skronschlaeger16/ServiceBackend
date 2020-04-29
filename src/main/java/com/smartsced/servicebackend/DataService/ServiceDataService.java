@@ -43,14 +43,11 @@ public class ServiceDataService {
             throw new EmployeesBadRequestException("The name of the employee must be set");
 
         }
-        if(isNullOrEmpty(employeeDto.getLatitude())) {
-            throw new EmployeesBadRequestException("The name of the latitude must be set");
+        if(isNullOrEmpty(employeeDto.getAddress())) {
+            throw new EmployeesBadRequestException("The name of the address must be set");
 
         }
-        if(isNullOrEmpty(employeeDto.getLongitude())) {
-            throw new EmployeesBadRequestException("The name of the longitude must be set");
 
-        }
 
         if(employeeDto.getName().length()<=3)
         {
@@ -78,8 +75,10 @@ public class ServiceDataService {
     private EmployeeResource convertEmployeeToEmployeeResource(EmployeeDto emp) {
         EmployeeResource result = new EmployeeResource();
         result.setName(emp.getName());
-        result.setLatitude(emp.getLatitude());
-        result.setLongitude(emp.getLongitude());
+        LongitudeLatitude longitudeLatitude = locationIQDataService.getLongitudeLatitudeByAddress(emp.getAddress());
+
+        result.setLatitude(longitudeLatitude.getLatitude());
+        result.setLongitude(longitudeLatitude.getLongitude());
 
         return result;
     }

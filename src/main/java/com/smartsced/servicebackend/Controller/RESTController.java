@@ -53,7 +53,6 @@ import java.util.List;
 
         @RequestMapping(value ="/employees", method = RequestMethod.POST)
         public EmployeeResource  addEmployees(@RequestBody EmployeeDto serviceDto) {
-
             return serviceDataService.addEmployees(serviceDto);
         }
     }

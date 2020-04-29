@@ -6,6 +6,6 @@ import lombok.Data;
 public class EmployeeDto {
 
     private String name;
-    private String longitude;
-    private String latitude;
+    private String address;
+    //private String latitude;
 }
